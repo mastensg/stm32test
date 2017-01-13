@@ -1,0 +1,6 @@
+*.bin
+*.elf
+*.lst
+*.o
+.*.swp
+/breathe.h
