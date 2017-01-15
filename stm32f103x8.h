@@ -59,6 +59,73 @@
 #define GPIOC_BRR (GPIOC_BASE[5])   // Port C bit reset register
 #define GPIOC_LCKR (GPIOC_BASE[6])  // Port C configuration lock register
 
+// Serial Peripheral Interface  //////////////////////////////////////////////
+
+#define SPI_BASE ((volatile void *)0x40013000)
+
+#define SPI_CR1 (*(volatile u32 *)(SPI_BASE + 0x00))  // Control register 1
+#define SPI_BIDIMODE (1 << 15)  // Bidirectional data mode enable
+#define SPI_BIDIOE (1 << 14)    // Output enable in bidirectional mode
+#define SPI_CRCEN (1 << 13)     // Hardware CRC calculation enable
+#define SPI_CRCNEXT (1 << 12)   // CRC transfer next
+#define SPI_DFF (1 << 11)       // Data frame format
+#define SPI_RXONLY (1 << 10)    // Receive only
+#define SPI_SSM (1 << 9)        // Software slave management
+#define SPI_SSI (1 << 8)        // Internal slave select
+#define SPI_LSBFIRST (1 << 7)   // Frame format
+#define SPI_SPE (1 << 6)        // SPI enable
+#define SPI_BR2 (1 << 5)  // Baud rate control: SPI_CLK = f_PCLK / (2 << SPI_BR)
+#define SPI_BR1 (1 << 4)  // Baud rate control
+#define SPI_BR0 (1 << 3)  // Baud rate control
+#define SPI_MSTR (1 << 2)  // Master selection
+#define SPI_CPOL (1 << 1)  // Clock polarity
+#define SPI_CPHA (1 << 0)  // Clock phase
+
+#define SPI_CR2 (*(volatile u32 *)(SPI_BASE + 0x04))  // Control register 2
+/* Bit 15: Reserved */
+/* Bit 14: Reserved */
+/* Bit 13: Reserved */
+/* Bit 12: Reserved */
+/* Bit 11: Reserved */
+/* Bit 10: Reserved */
+/* Bit 9: Reserved */
+/* Bit 8: Reserved */
+#define SPI_TXEIE (1 << 7)   // Tx buffer empty interrupt enable
+#define SPI_RXNEIE (1 << 6)  // Rx buffer not empty interrupt enable
+#define SPI_ERRIE (1 << 5)   // Error interrupt enable
+/* Bit 4: Reserved */
+/* Bit 3: Reserved */
+#define SPI_SSOE (1 << 2)     // SS output enable
+#define SPI_TXDMAEN (1 << 1)  // Tx buffer DMA enable
+#define SPI_RXDMAEN (1 << 0)  // Rx buffer DMA enable
+
+#define SPI_SR (*(volatile u32 *)(SPI_BASE + 0x08))  // Status register
+/* Bit 15: Reserved */
+/* Bit 14: Reserved */
+/* Bit 13: Reserved */
+/* Bit 12: Reserved */
+/* Bit 11: Reserved */
+/* Bit 10: Reserved */
+/* Bit 9: Reserved */
+/* Bit 8: Reserved */
+#define SPI_BSY (1 << 7)     // Busy flag
+#define SPI_OVR (1 << 6)     // Overrun flag
+#define SPI_MODF (1 << 5)    // Mode fault
+#define SPI_CRCERR (1 << 4)  // CRC error flag
+#define SPI_UDR (1 << 3)     // Underrun flag
+#define SPI_CHSIDE (1 << 2)  // Channel side
+#define SPI_TXE (1 << 1)     // Transmit buffer empty
+#define SPI_RXNE (1 << 0)    // Receive buffer not empty
+
+#define SPI_DR (*(volatile u32 *)(SPI_BASE + 0x0c))  // Data register
+/* Bits 8~0: Data value */
+
+#define SPI_CRCPR (*(volatile u32 *)(SPI_BASE + 0x10))
+#define SPI_RXCRCR (*(volatile u32 *)(SPI_BASE + 0x14))
+#define SPI_TXCRCR (*(volatile u32 *)(SPI_BASE + 0x18))
+#define SPI_I2SCFGR (*(volatile u32 *)(SPI_BASE + 0x1c))
+#define SPI_I2SPR (*(volatile u32 *)(SPI_BASE + 0x20))
+
 // Universal (A)synchronous Receiver Transmitter  ////////////////////////////
 
 #define USART_BASE ((volatile void *)0x40013800)
@@ -217,3 +284,29 @@
 #define USB_EP7R (*(USB_BASE + 0xNN))
 
 #define USB_ (*(USB_BASE + 0xNN))
+
+// GPIO  /////////////////////////////////////////////////////////////////////
+
+// GPIO MODE bits
+#define GPIO_INPUT 0b0000
+#define GPIO_OUTPUT_10M 0b0001
+#define GPIO_OUTPUT_2M 0b0010
+#define GPIO_OUTPUT_50M 0b0011
+
+// GPIO input configuration bits
+#define GPIO_ANALOG 0b0000
+#define GPIO_FLOATING 0b0100
+#define GPIO_PULLED 0b1000
+
+// GPIO output configuration bits
+#define GPIO_GENERAL_PUSH_PULL 0b0000
+#define GPIO_GENERAL_OPEN_DRAIN 0b0100
+#define GPIO_ALTERNATE_PUSH_PULL 0b1000
+#define GPIO_ALTERNATE_OPEN_DRAIN 0b1100
+
+static void gpio_configure(volatile u32 *base, u8 pin, u8 bits) {
+  volatile u32 *cr = base + (7 < pin);
+  cr = (cr & (~(0xf << (4 * pin)))) | (bits << (4 * 5));
+}
+
+//////////////////////////////////////////////////////////////////////////////

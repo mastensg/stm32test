@@ -12,32 +12,61 @@ __attribute__((always_inline)) static inline void delay_nops(u32 n) {
   }
 }
 
-static void uart_init(){
-}
-
-static void uart_sendchar(u8 c){
-}
-
-void rst_handler() {
+static void chirp_init() {
   RCC_APB2ENR |= IOPCEN;
-  GPIOC_CRH = 0x44344444;
 
+// TODO: test this
+#if 0
+  GPIOC_CRH = 0x44344444;
+#else
+  gpio_configure(GPIOC_BASE, 13, GPIO_OUTPUT_2M | GPIO_GENERAL_PUSH_PULL);
+#endif
+}
+
+static void chirp() {
   for (u32 i = 0; i < 4; ++i) {
     GPIOC_ODR = (0 << 13);
     delay_nops(30000);
     GPIOC_ODR = (1 << 13);
     delay_nops(30000);
   }
+}
 
+static void spi_init() {
+  // SPI1: SCLK PA5, MOSI PA7
   RCC_APB2ENR |= IOPAEN;
-  RCC_APB2ENR |= AFIOEN;
+
+  // PA5 push-pull
+  GPIOA_CRL = (GPIOA_CRL & (~(0b1111 << (4 * 5)))) | (0b0000 << (4 * 5));
+  gpio_configure(GPIOA_BASE, 5, GPIO_OUTPUT_2M | GPIO_ALTERNATE_PUSH_PULL);
+
+  RCC_APB2ENR |= SPI1EN;
+}
+
+static void spi_sendchar(u8 c) {}
+
+static void uart_init() {
+  RCC_APB2ENR |= IOPAEN;
   GPIOA_CRH = 0x444444b4;
 
   RCC_APB2ENR |= USART1EN;
-  // USART_BRR = (52 << 4) | (1);
-  USART_BRR = (4 << 4) | (5);
+  // USART_BRR = (52 << 4) | (1); // 9600 baud
+  USART_BRR = (4 << 4) | (5);  // 115200 baud
   USART_CR1 = USART_TE | USART_RE;
   USART_CR1 |= USART_UE;
+}
+
+static void uart_sendchar(u8 c) {
+  for (; !(USART_SR & USART_TXE);) {
+  }
+  USART_DR = c;
+}
+
+void rst_handler() {
+  chirp_init();
+  chirp();
+
+  uart_init();
 
   u8 i = 0;
   for (;;) {
@@ -45,19 +74,12 @@ void rst_handler() {
 
     for (u8 k = 0; k < 3; ++k) {
       for (u8 j = 0; j < 40; ++j) {
-        for (; !(USART_SR & USART_TXE);) {
-        }
-        USART_DR = j < dut ? 'A' : ' ';
+        uart_sendchar(j < dut ? 'A' : ' ');
         GPIOC_ODR = ((!(j < dut)) << 13);
       }
 
-      for (; !(USART_SR & USART_TXE);) {
-      }
-      USART_DR = '\n';
-
-      for (; !(USART_SR & USART_TXE);) {
-      }
-      USART_DR = '\r';
+      uart_sendchar('\n');
+      uart_sendchar('\r');
     }
 
     ++i;
