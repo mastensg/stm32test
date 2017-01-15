@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-./breathe.py | clang-format > breathe.h
+./breathe.py > breathe.h
 
 arm-none-eabi-gcc -std=c11 \
   -Wall -Wextra -Wno-main \
