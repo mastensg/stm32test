@@ -15,12 +15,7 @@ __attribute__((always_inline)) static inline void delay_nops(u32 n) {
 static void chirp_init() {
   RCC_APB2ENR |= IOPCEN;
 
-// TODO: test this
-#if 0
-  GPIOC_CRH = 0x44344444;
-#else
   gpio_configure(GPIOC_BASE, 13, GPIO_OUTPUT_2M | GPIO_GENERAL_PUSH_PULL);
-#endif
 }
 
 static void chirp() {

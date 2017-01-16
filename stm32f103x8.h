@@ -306,7 +306,7 @@
 
 static void gpio_configure(volatile u32 *base, u8 pin, u8 bits) {
   volatile u32 *cr = base + (7 < pin);
-  cr = (cr & (~(0xf << (4 * pin)))) | (bits << (4 * 5));
+  *cr = (*cr & (~(0xf << (4 * pin)))) | (bits << (4 * 5));
 }
 
 //////////////////////////////////////////////////////////////////////////////
