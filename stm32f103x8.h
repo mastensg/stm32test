@@ -288,25 +288,29 @@
 // GPIO  /////////////////////////////////////////////////////////////////////
 
 // GPIO MODE bits
-#define GPIO_INPUT 0b0000
-#define GPIO_OUTPUT_10M 0b0001
-#define GPIO_OUTPUT_2M 0b0010
-#define GPIO_OUTPUT_50M 0b0011
+#define GPIO_INPUT 0b00
+#define GPIO_OUTPUT_10M 0b01
+#define GPIO_OUTPUT_2M 0b10
+#define GPIO_OUTPUT_50M 0b11
 
 // GPIO input configuration bits
-#define GPIO_ANALOG 0b0000
-#define GPIO_FLOATING 0b0100
-#define GPIO_PULLED 0b1000
+#define GPIO_ANALOG 0b00
+#define GPIO_FLOATING 0b01
+#define GPIO_PULLED 0b10
 
 // GPIO output configuration bits
-#define GPIO_GENERAL_PUSH_PULL 0b0000
-#define GPIO_GENERAL_OPEN_DRAIN 0b0100
-#define GPIO_ALTERNATE_PUSH_PULL 0b1000
-#define GPIO_ALTERNATE_OPEN_DRAIN 0b1100
+#define GPIO_GENERAL_PUSH_PULL 0b00
+#define GPIO_GENERAL_OPEN_DRAIN 0b01
+#define GPIO_ALTERNATE_PUSH_PULL 0b10
+#define GPIO_ALTERNATE_OPEN_DRAIN 0b11
 
-static void gpio_configure(volatile u32 *base, u8 pin, u8 bits) {
-  volatile u32 *cr = base + (7 < pin);
-  *cr = (*cr & (~(0xf << (4 * pin)))) | (bits << (4 * 5));
+static void gpio_configure(volatile u32 *base, u8 pin, u8 mode, u8 cnf) {
+  u8 is_high = 7 < pin;
+  volatile u32 *cr = base + is_high;
+  u8 bits = (cnf << 2) | mode;
+  u8 left_shift = (pin & 7) << 2;
+
+  *cr = (*cr & (~(0xf << left_shift))) | (bits << left_shift);
 }
 
 //////////////////////////////////////////////////////////////////////////////

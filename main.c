@@ -6,43 +6,37 @@
 
 #include "breathe.h"
 
+//////////////////////////////////////////////////////////////////////////////
+
 __attribute__((always_inline)) static inline void delay_nops(u32 n) {
   for (u32 i = 0; i < n; ++i) {
     __asm__ __volatile__("nop\n");
   }
 }
 
+//////////////////////////////////////////////////////////////////////////////
+
 static void chirp_init() {
   RCC_APB2ENR |= IOPCEN;
 
-  gpio_configure(GPIOC_BASE, 13, GPIO_OUTPUT_2M | GPIO_GENERAL_PUSH_PULL);
+  gpio_configure(GPIOC_BASE, 13, GPIO_OUTPUT_2M, GPIO_GENERAL_PUSH_PULL);
 }
 
 static void chirp() {
   for (u32 i = 0; i < 4; ++i) {
     GPIOC_ODR = (0 << 13);
     delay_nops(30000);
+
     GPIOC_ODR = (1 << 13);
     delay_nops(30000);
   }
 }
 
-static void spi_init() {
-  // SPI1: SCLK PA5, MOSI PA7
-  RCC_APB2ENR |= IOPAEN;
-
-  // PA5 push-pull
-  GPIOA_CRL = (GPIOA_CRL & (~(0b1111 << (4 * 5)))) | (0b0000 << (4 * 5));
-  gpio_configure(GPIOA_BASE, 5, GPIO_OUTPUT_2M | GPIO_ALTERNATE_PUSH_PULL);
-
-  RCC_APB2ENR |= SPI1EN;
-}
-
-static void spi_sendchar(u8 c) {}
+//////////////////////////////////////////////////////////////////////////////
 
 static void uart_init() {
   RCC_APB2ENR |= IOPAEN;
-  GPIOA_CRH = 0x444444b4;
+  gpio_configure(GPIOA_BASE, 9, GPIO_OUTPUT_50M, GPIO_ALTERNATE_PUSH_PULL);
 
   RCC_APB2ENR |= USART1EN;
   // USART_BRR = (52 << 4) | (1); // 9600 baud
@@ -56,6 +50,25 @@ static void uart_sendchar(u8 c) {
   }
   USART_DR = c;
 }
+
+//////////////////////////////////////////////////////////////////////////////
+
+#if 0
+static void spi_init() {
+  // SPI1: SCLK PA5, MOSI PA7
+  RCC_APB2ENR |= IOPAEN;
+
+  // PA5 push-pull
+  // GPIOA_CRL = (GPIOA_CRL & (~(0b1111 << (4 * 5)))) | (0b0000 << (4 * 5));
+  gpio_configure(GPIOA_BASE, 5, GPIO_OUTPUT_2M, GPIO_ALTERNATE_PUSH_PULL);
+
+  RCC_APB2ENR |= SPI1EN;
+}
+
+static void spi_sendchar(u8 c) {}
+#endif
+
+//////////////////////////////////////////////////////////////////////////////
 
 void rst_handler() {
   chirp_init();
