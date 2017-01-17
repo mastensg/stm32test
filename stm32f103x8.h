@@ -61,6 +61,8 @@
 
 // Serial Peripheral Interface  //////////////////////////////////////////////
 
+// TODO(mastensg): support SPI1, SPI2, ...
+
 #define SPI_BASE ((volatile void *)0x40013000)
 
 #define SPI_CR1 (*(volatile u32 *)(SPI_BASE + 0x00))  // Control register 1
@@ -127,6 +129,8 @@
 #define SPI_I2SPR (*(volatile u32 *)(SPI_BASE + 0x20))
 
 // Universal (A)synchronous Receiver Transmitter  ////////////////////////////
+
+// TODO(mastensg): support USART1, USART2, ...
 
 #define USART_BASE ((volatile void *)0x40013800)
 

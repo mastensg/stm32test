@@ -53,20 +53,23 @@ static void uart_sendchar(u8 c) {
 
 //////////////////////////////////////////////////////////////////////////////
 
-#if 0
 static void spi_init() {
-  // SPI1: SCLK PA5, MOSI PA7
   RCC_APB2ENR |= IOPAEN;
 
-  // PA5 push-pull
-  // GPIOA_CRL = (GPIOA_CRL & (~(0b1111 << (4 * 5)))) | (0b0000 << (4 * 5));
   gpio_configure(GPIOA_BASE, 5, GPIO_OUTPUT_2M, GPIO_ALTERNATE_PUSH_PULL);
+  gpio_configure(GPIOA_BASE, 7, GPIO_OUTPUT_2M, GPIO_ALTERNATE_PUSH_PULL);
 
   RCC_APB2ENR |= SPI1EN;
+
+  // LSBFIRST?
+  SPI_CR1 |= SPI_SPE | (7 << 3) | SPI_MSTR;
 }
 
-static void spi_sendchar(u8 c) {}
-#endif
+static void spi_sendchar(u8 c) {
+  for (; !(SPI_SR & SPI_TXE);) {
+  }
+  SPI_DR = c;
+}
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -76,13 +79,17 @@ void rst_handler() {
 
   uart_init();
 
+  spi_init();
+
   u8 i = 0;
   for (;;) {
     u16 dut = breathe[i] >> 8;
 
     for (u8 k = 0; k < 3; ++k) {
       for (u8 j = 0; j < 40; ++j) {
-        uart_sendchar(j < dut ? 'A' : ' ');
+        u8 c = j < dut ? 'A' : ' ';
+        uart_sendchar(c);
+        spi_sendchar(c);
         GPIOC_ODR = ((!(j < dut)) << 13);
       }
 
