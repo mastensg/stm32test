@@ -120,7 +120,8 @@
 #define SPI_RXNE (1 << 0)    // Receive buffer not empty
 
 #define SPI_DR (*(volatile u32 *)(SPI_BASE + 0x0c))  // Data register
-/* Bits 8~0: Data value */
+
+/* Bits 8~0 */  // Data value
 
 #define SPI_CRCPR (*(volatile u32 *)(SPI_BASE + 0x10))
 #define SPI_RXCRCR (*(volatile u32 *)(SPI_BASE + 0x14))
@@ -235,20 +236,20 @@
 
 // Reset value: 0x0003
 
-#define CTRM (1 << 15)     // Correct transfer interrupt mask
-#define PMAOVRM (1 << 14)  // Packet memory area over / underrun interrupt mask
-#define ERRM (1 << 13)     // Error interrupt mask
-#define WKUPM (1 << 12)    // Wakeup interrupt mask
-#define SUSPM (1 << 11)    // Suspend mode interrupt mask
-#define RESETM (1 << 10)   // USB reset interrupt mask
-#define SOFM (1 << 9)      // Start of frame interrupt mask
-#define ESOFM (1 << 8)     // Expected start of frame interrupt mask
-/* Bits 7~5: Reserved */   //
-#define RESUME (1 << 4)    // Resume request
-#define FSUSP (1 << 3)     // Force suspend
-#define LP_MODE (1 << 2)   // Low-power mode
-#define PDWN (1 << 1)      // Power down
-#define FRES (1 << 0)      // Force USB reset
+#define USB_CTRM (1 << 15)     // Correct transfer interrupt mask
+#define USB_PMAOVRM (1 << 14)  // Packet over/underrun interrupt mask
+#define USB_ERRM (1 << 13)     // Error interrupt mask
+#define USB_WKUPM (1 << 12)    // Wakeup interrupt mask
+#define USB_SUSPM (1 << 11)    // Suspend mode interrupt mask
+#define USB_RESETM (1 << 10)   // USB reset interrupt mask
+#define USB_SOFM (1 << 9)      // Start of frame interrupt mask
+#define USB_ESOFM (1 << 8)     // Expected start of frame interrupt mask
+/* Bits 7~5: Reserved */       //
+#define USB_RESUME (1 << 4)    // Resume request
+#define USB_FSUSP (1 << 3)     // Force suspend
+#define USB_LP_MODE (1 << 2)   // Low-power mode
+#define USB_PDWN (1 << 1)      // Power down
+#define USB_FRES (1 << 0)      // Force USB reset
 
 // USB interrupt status register  /////
 
@@ -260,32 +261,63 @@
 // clear, and ones for the bits you want to stay the same. Do not
 // read-modify-write.
 
-#define CTR (1 << 15)     // Correct transfer
-#define PMAOVR (1 << 14)  // Packet memory over / underrun
-#define ERR (1 << 13)     // Error
-#define WKUP (1 << 12)    // Wakeup
-#define SUSP (1 << 11)    // Suspend mode request
-#define RESET (1 << 10)   // USB reset request
-#define SOF (1 << 9)      // Start of frame
-#define ESOF (1 << 8)     // Expected start of frame
+#define USB_CTR (1 << 15)     // Correct transfer
+#define USB_PMAOVR (1 << 14)  // Packet memory over / underrun
+#define USB_ERR (1 << 13)     // Error
+#define USB_WKUP (1 << 12)    // Wakeup
+#define USB_SUSP (1 << 11)    // Suspend mode request
+#define USB_RESET (1 << 10)   // USB reset request
+#define USB_SOF (1 << 9)      // Start of frame
+#define USB_ESOF (1 << 8)     // Expected start of frame
 // Bits 7~5: Reserved
-#define DIR (1 << 4)  // Direction of transaction
+#define USB_DIR (1 << 4)  // Direction of transaction
 // Bits 3~0: Endpoint Identifier
 
-// USB frame number register  /////////
+#define USB_FNR (*(USB_BASE + 0x48))  // USB frame number register
 
-#define USB_FNR (*(USB_BASE + 0xNN))
-#define USB_DADDR (*(USB_BASE + 0xNN))
-#define USB_BTABLE (*(USB_BASE + 0xNN))
+#define USB_RXDP (1 << 15)   // Receive data + line status
+#define USB_RXDM (1 << 14)   // Receive data - line status
+#define USB_LCK (1 << 13)    // Locked
+#define USB_LSOF1 (1 << 12)  // Lost SOF, number of consecutive SOF packets lost
+#define USB_LSOF0 (1 << 11)  // Lost SOF
+/* Bits 10~0 */              // Frame number
 
-#define USB_EP0R (*(USB_BASE + 0xNN))
-#define USB_EP1R (*(USB_BASE + 0xNN))
-#define USB_EP2R (*(USB_BASE + 0xNN))
-#define USB_EP3R (*(USB_BASE + 0xNN))
-#define USB_EP4R (*(USB_BASE + 0xNN))
-#define USB_EP5R (*(USB_BASE + 0xNN))
-#define USB_EP6R (*(USB_BASE + 0xNN))
-#define USB_EP7R (*(USB_BASE + 0xNN))
+#define USB_DADDR (*(USB_BASE + 0x4c))  // USB device address
+
+/* Bits 15~8: Reserved */
+#define USB_EF (1 << 7)  // Enable function
+/* Bits 6~0 ADD[6:0] */  // Device address
+
+#define USB_BTABLE (*(USB_BASE + 0x50))  // Buffer table address
+
+/* Bits 15~3 BTABLE[15:3] */  // Buffer table
+/* Bits 2~0: Reserved, forced 0 */
+
+#define USB_EP0R (*(USB_BASE + 0x00))  // USB endpoint 0 register
+#define USB_EP1R (*(USB_BASE + 0x04))  // USB endpoint 1 register
+#define USB_EP2R (*(USB_BASE + 0x08))  // USB endpoint 2 register
+#define USB_EP3R (*(USB_BASE + 0x0c))  // USB endpoint 3 register
+#define USB_EP4R (*(USB_BASE + 0x10))  // USB endpoint 4 register
+#define USB_EP5R (*(USB_BASE + 0x14))  // USB endpoint 5 register
+#define USB_EP6R (*(USB_BASE + 0x18))  // USB endpoint 6 register
+#define USB_EP7R (*(USB_BASE + 0x1c))  // USB endpoint 7 register
+
+#define USB_CTR_RX (1 << 15)    // Correct transfer for reception
+#define USB_DTOG_RX (1 << 14)   // Data toggle for reception
+#define USB_STAT_RX1 (1 << 13)  // Status bits for reception
+#define USB_STAT_RX0 (1 << 12)  // Status bits for reception
+#define USB_SETUP (1 << 11)     // Setup transaction completed
+#define USB_EP_TYPE1 (1 << 10)  // Endpoint type
+#define USB_EP_TYPE0 (1 << 9)   // Endpoint type
+#define USB_EP_KIND (1 << 8)    // Endpoint kind
+#define USB_CTR_TX (1 << 7)     // Correct transfer for transmission
+#define USB_DTOG_TX (1 << 6)    // Data toggle for transmission
+#define USB_STAT_TX1 (1 << 5)   // Status bits for transmission
+#define USB_STAT_TX0 (1 << 4)   // Status bits for transmission
+#define USB_EA3 (1 << 3)        // Endpoint address
+#define USB_EA2 (1 << 2)        // Endpoint address
+#define USB_EA1 (1 << 1)        // Endpoint address
+#define USB_EA0 (1 << 0)        // Endpoint address
 
 #define USB_ (*(USB_BASE + 0xNN))
 
