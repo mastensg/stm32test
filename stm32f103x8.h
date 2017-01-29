@@ -3,25 +3,77 @@
 
 // Reset and clock control (RCC)  ////////////////////////////////////////////
 
-#define RCC_BASE ((volatile u32 *)0x40021000)
+#define RCC_BASE ((volatile void *)0x40021000)
 
-#define RCC_APB2ENR (RCC_BASE[6])  // APB2 peripheral clock enable register
-/* Bit 15: Reserved */
-#define USART1EN (1 << 14)
-/* Bit 13: Reserved */
-#define SPI1EN (1 << 12)
-#define TIM1EN (1 << 11)
-#define ADC2EN (1 << 10)
-#define ADC1EN (1 << 9)
-/* Bit 8: Reserved */
-/* Bit 7: Reserved */
-#define IOPEEN (1 << 6)
-#define IOPDEN (1 << 5)
-#define IOPCEN (1 << 4)
-#define IOPBEN (1 << 3)
-#define IOPAEN (1 << 2)
+#define RCC_APB2ENR (*(volatile u32 *)(RCC_BASE + 0x18))  // APB2 peripheral clock enable
+
+/* Bit 31: Reserved */
+/* Bit 30: Reserved */
+/* Bit 29: Reserved */
+/* Bit 28: Reserved */
+/* Bit 27: Reserved */
+/* Bit 26: Reserved */
+/* Bit 25: Reserved */
+/* Bit 24: Reserved */
+/* Bit 23: Reserved */
+/* Bit 22: Reserved */
+#define RCC_TIM11EN (1 << 21)
+#define RCC_TIM10EN (1 << 20)
+#define RCC_TIM9EN (1 << 19)
+/* Bit 18: Reserved */
+/* Bit 17: Reserved */
+/* Bit 16: Reserved */
+#define RCC_ADC3EN (1 << 15)
+#define RCC_USART1EN (1 << 14)
+#define RCC_TIM8EN (1 << 13)
+#define RCC_SPI1EN (1 << 12)
+#define RCC_TIM1EN (1 << 11)
+#define RCC_ADC2EN (1 << 10)
+#define RCC_ADC1EN (1 << 9)
+#define RCC_IOPGEN (1 << 8)
+#define RCC_IOPFEN (1 << 7)
+#define RCC_IOPEEN (1 << 6)
+#define RCC_IOPDEN (1 << 5)
+#define RCC_IOPCEN (1 << 4)
+#define RCC_IOPBEN (1 << 3)
+#define RCC_IOPAEN (1 << 2)
 /* Bit 1: Reserved */
-#define AFIOEN (1 << 0)
+#define RCC_AFIOEN (1 << 0)
+
+#define RCC_APB1ENR (*(volatile u32 *)(RCC_BASE + 0x1c))  // APB1 peripheral clock enable
+
+/* Bit 31: Reserved */
+/* Bit 30: Reserved */
+#define RCC_DACEN (1 << 29)
+#define RCC_PWREN (1 << 28)
+#define RCC_BKPEN (1 << 27)
+/* Bit 26: Reserved */
+#define RCC_CANEN (1 << 25)
+/* Bit 24: Reserved */
+#define RCC_USBEN (1 << 23)
+#define RCC_I2C2EN (1 << 22)
+#define RCC_I2C1EN (1 << 21)
+#define RCC_UART5EN (1 << 20)
+#define RCC_UART4EN (1 << 19)
+#define RCC_USART3EN (1 << 18)
+#define RCC_USART2EN (1 << 17)
+/* Bit 16: Reserved */
+#define RCC_SPI3EN (1 << 15)
+#define RCC_SPI2EN (1 << 14)
+/* Bit 13: Reserved */
+/* Bit 12: Reserved */
+#define RCC_WWDGEN (1 << 11)
+/* Bit 10: Reserved */
+/* Bit 9: Reserved */
+#define RCC_TIM14EN (1 << 8)
+#define RCC_TIM13EN (1 << 7)
+#define RCC_TIM12EN (1 << 6)
+#define RCC_TIM7EN (1 << 5)
+#define RCC_TIM6EN (1 << 4)
+#define RCC_TIM5EN (1 << 3)
+#define RCC_TIM4EN (1 << 2)
+#define RCC_TIM3EN (1 << 1)
+#define RCC_TIM2EN (1 << 0)
 
 // General purpose input/output port A  //////////////////////////////////////
 
@@ -318,8 +370,6 @@
 #define USB_EA2 (1 << 2)        // Endpoint address
 #define USB_EA1 (1 << 1)        // Endpoint address
 #define USB_EA0 (1 << 0)        // Endpoint address
-
-#define USB_ (*(USB_BASE + 0xNN))
 
 // GPIO  /////////////////////////////////////////////////////////////////////
 
