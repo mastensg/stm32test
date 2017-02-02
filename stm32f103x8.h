@@ -1,11 +1,119 @@
 #define RAM_BASE 0x20000000
-#define STACK_TOP (RAM_BASE + 20 * 1024)
+
+#define STACK_TOP (RAM_BASE + 10 * 1024)
+// TODO(mastensg): if my stack takes up all of ram, does that preclude any
+// statically allocated ram?
 
 // Reset and clock control (RCC)  ////////////////////////////////////////////
 
 #define RCC_BASE ((volatile void *)0x40021000)
 
-#define RCC_APB2ENR (*(volatile u32 *)(RCC_BASE + 0x18))  // APB2 peripheral clock enable
+#define RCC_CR (*(volatile u32 *)(RCC_BASE + 0x00))  // Clock control
+
+/* Bit 31: Reserved */
+/* Bit 30: Reserved */
+/* Bit 29: Reserved */
+/* Bit 28: Reserved */
+/* Bit 27: Reserved */
+/* Bit 26: Reserved */
+#define RCC_PLLRDY (1 << 25)
+#define RCC_PLLON (1 << 24)
+/* Bit 23: Reserved */
+/* Bit 22: Reserved */
+/* Bit 21: Reserved */
+/* Bit 20: Reserved */
+#define RCC_CSSON (1 << 19)
+#define RCC_HSEBYP (1 << 18)
+#define RCC_HSERDY (1 << 17)
+#define RCC_HSEON (1 << 16)
+#define RCC_HSICAL7 (1 << 15)
+#define RCC_HSICAL6 (1 << 14)
+#define RCC_HSICAL5 (1 << 13)
+#define RCC_HSICAL4 (1 << 12)
+#define RCC_HSICAL3 (1 << 11)
+#define RCC_HSICAL2 (1 << 10)
+#define RCC_HSICAL1 (1 << 9)
+#define RCC_HSICAL0 (1 << 8)
+#define RCC_HSITRIM4 (1 << 7)
+#define RCC_HSITRIM3 (1 << 6)
+#define RCC_HSITRIM2 (1 << 5)
+#define RCC_HSITRIM1 (1 << 4)
+#define RCC_HSITRIM0 (1 << 3)
+/* Bit 2: Reserved */
+#define RCC_HSIRDY (1 << 1)
+#define RCC_HSION (1 << 0)
+
+#define RCC_CFGR (*(volatile u32 *)(RCC_BASE + 0x04))  // Clock configuration
+
+/* Bit 31: Reserved */
+/* Bit 30: Reserved */
+/* Bit 29: Reserved */
+/* Bit 28: Reserved */
+/* Bit 27: Reserved */
+#define RCC_MCO2 (1 << 25)
+#define RCC_MCO1 (1 << 25)
+#define RCC_MCO0 (1 << 24)
+/* Bit 23: Reserved */
+#define RCC_USBPRE (1 << 22)
+#define RCC_PLLMUL3 (1 << 21)
+#define RCC_PLLMUL2 (1 << 20)
+#define RCC_PLLMUL1 (1 << 19)
+#define RCC_PLLMUL0 (1 << 18)
+#define RCC_PLLXTPRE (1 << 17)
+#define RCC_PLLSRC (1 << 16)
+#define RCC_ADCPRE1 (1 << 15)
+#define RCC_ADCPRE0 (1 << 14)
+#define RCC_PPRE2_2 (1 << 13)
+#define RCC_PPRE2_1 (1 << 12)
+#define RCC_PPRE2_0 (1 << 11)
+#define RCC_PPRE1_2 (1 << 10)
+#define RCC_PPRE1_1 (1 << 9)
+#define RCC_PPRE1_0 (1 << 8)
+#define RCC_HPRE3 (1 << 7)
+#define RCC_HPRE2 (1 << 6)
+#define RCC_HPRE1 (1 << 5)
+#define RCC_HPRE0 (1 << 4)
+#define RCC_SWS1 (1 << 3)
+#define RCC_SWS0 (1 << 2)
+#define RCC_SW1 (1 << 1)
+#define RCC_SW0 (1 << 0)
+
+#define RCC_APB1RSTR (*(volatile u32 *)(RCC_BASE + 0x10))  // APB1 reset
+
+/* Bit 31: Reserved */
+/* Bit 30: Reserved */
+#define RCC_DACRST (1 << 29)
+#define RCC_PWRRST (1 << 28)
+#define RCC_BKPRST (1 << 27)
+/* Bit 26: Reserved */
+#define RCC_CANRST (1 << 25)
+/* Bit 24: Reserved */
+#define RCC_USBRST (1 << 23)
+#define RCC_I2C2RST (1 << 22)
+#define RCC_I2C1RST (1 << 21)
+#define RCC_UART5RST (1 << 20)
+#define RCC_UART4RST (1 << 19)
+#define RCC_USART3RST (1 << 18)
+#define RCC_USART2RST (1 << 17)
+/* Bit 16: Reserved */
+#define RCC_SPI3RST (1 << 15)
+#define RCC_SPI2RST (1 << 14)
+/* Bit 13: Reserved */
+/* Bit 12: Reserved */
+#define RCC_WWDGRST (1 << 11)
+/* Bit 10: Reserved */
+/* Bit 9: Reserved */
+#define RCC_TIM14RST (1 << 8)
+#define RCC_TIM13RST (1 << 7)
+#define RCC_TIM12RST (1 << 6)
+#define RCC_TIM7RST (1 << 5)
+#define RCC_TIM6RST (1 << 4)
+#define RCC_TIM5RST (1 << 3)
+#define RCC_TIM4RST (1 << 2)
+#define RCC_TIM3RST (1 << 1)
+#define RCC_TIM2RST (1 << 0)
+
+#define RCC_APB2ENR (*(volatile u32 *)(RCC_BASE + 0x18))  // APB2 clock enable
 
 /* Bit 31: Reserved */
 /* Bit 30: Reserved */
@@ -40,7 +148,7 @@
 /* Bit 1: Reserved */
 #define RCC_AFIOEN (1 << 0)
 
-#define RCC_APB1ENR (*(volatile u32 *)(RCC_BASE + 0x1c))  // APB1 peripheral clock enable
+#define RCC_APB1ENR (*(volatile u32 *)(RCC_BASE + 0x1c))  // APB1 clock enable
 
 /* Bit 31: Reserved */
 /* Bit 30: Reserved */
@@ -215,6 +323,7 @@
 // USART_DIV = f_CLK / (16 * Baudrate)
 // 8000000 / (16 * 9600) = 52.0833...
 // 8000000 / (16 * 115200) = 4.3402777...
+// 72000000 / (16 * 115200) = 4.3402777...
 
 #define USART_CR1 (*(volatile u32 *)(USART_BASE + 0x0c))  // Control register 1
 /* Bit 15: Reserved */
@@ -370,6 +479,11 @@
 #define USB_EA2 (1 << 2)        // Endpoint address
 #define USB_EA1 (1 << 1)        // Endpoint address
 #define USB_EA0 (1 << 0)        // Endpoint address
+
+// Vector table  /////////////////////////////////////////////////////////////
+
+#define VECTOR_USB_HP_CAN_TX (0x8c / 4)   // USB high priority or CAN TX
+#define VECTOR_USB_LP_CAN_RX0 (0x90 / 4)  // USB low priority or CAN RX0
 
 // GPIO  /////////////////////////////////////////////////////////////////////
 
