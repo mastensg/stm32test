@@ -9,6 +9,7 @@ In terminal one:
 
 In terminal two:
 
+    make
     ./gdb.sh
 
 In GDB:
