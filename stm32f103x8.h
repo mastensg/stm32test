@@ -219,6 +219,168 @@
 #define GPIOC_BRR (GPIOC_BASE[5])   // Port C bit reset register
 #define GPIOC_LCKR (GPIOC_BASE[6])  // Port C configuration lock register
 
+// Inter-integrated Circuit Interface  ///////////////////////////////////////
+
+#define I2C1_BASE ((volatile void *)0x40005400)
+#define I2C2_BASE ((volatile void *)0x40005800)
+
+#define I2C1_CR1 (*(volatile u32 *)(I2C1_BASE + 0x00))  // Control register 1
+#define I2C2_CR1 (*(volatile u32 *)(I2C2_BASE + 0x00))  // Control register 1
+
+#define I2C_SWRST (1 << 15)  // Software reset
+/* Bit 14: Reserved */
+#define I2C_ALERT (1 << 13)     // SMBus alert
+#define I2C_PEC (1 << 12)       // Packet error checking
+#define I2C_POS (1 << 11)       // Acknowledge/PEC position
+#define I2C_ACK (1 << 10)       // Acknowledge enable
+#define I2C_STOP (1 << 9)       // Stop generation
+#define I2C_START (1 << 8)      // Start generation
+#define I2C_NOSTRETCH (1 << 7)  // Clock stretching disable (slave mode)
+#define I2C_ENGC (1 << 6)       // General call enable
+#define I2C_ENPEC (1 << 5)      // PEC enable
+#define I2C_ENARP (1 << 4)      // ARP enable
+#define I2C_SMBTYPE (1 << 3)    // SMBus type (0: device, 1: host)
+/* Bit 2: Reserved */
+#define I2C_SMBUS (1 << 1)  // SMBus mode (0: i2c, 1: smbus)
+#define I2C_PE (1 << 0)     // Peripheral enable
+
+#define I2C1_CR2 (*(volatile u32 *)(I2C1_BASE + 0x04))  // Control register 2
+#define I2C2_CR2 (*(volatile u32 *)(I2C2_BASE + 0x04))  // Control register 2
+
+/* Bit 15: Reserved */
+/* Bit 14: Reserved */
+/* Bit 13: Reserved */
+#define I2C_LAST (1 << 12)  // DMA last transfer (next DMA EOT is last transfer)
+#define I2C_DMAEN (1 << 11)    // DMA requests enable
+#define I2C_ITBUFEN (1 << 10)  // Buffer interrupt enable
+#define I2C_ITEVTEN (1 << 9)   // Event interrupt enable
+#define I2C_ITERREN (1 << 8)   // Error interrupt enable
+/* Bit 7: Reserved */
+/* Bit 6: Reserved */
+#define I2C_FREQ5 (1 << 5)  // Peripheral clock frequency
+#define I2C_FREQ4 (1 << 4)  // 000001: Not allowed
+#define I2C_FREQ3 (1 << 3)  // 000010:  2 MHz
+#define I2C_FREQ2 (1 << 2)  // ...
+#define I2C_FREQ1 (1 << 1)  // 110010: 50 MHz
+#define I2C_FREQ0 (1 << 0)  // 100100: Not allowed
+
+#define I2C1_OAR1 (*(volatile u32 *)(I2C1_BASE + 0x08))  // Own address 1
+#define I2C2_OAR1 (*(volatile u32 *)(I2C2_BASE + 0x08))  // Own address 1
+
+#define I2C_ADDMODE \ (1 << 15)  // Addressing mode (slave, 0: 7-bit, 1: 10-bit)
+/* Bit 14: Reserved */
+/* Bit 13: Reserved */
+/* Bit 12: Reserved */
+/* Bit 11: Reserved */
+/* Bit 10: Reserved */
+#define I2C_ADD9 (1 << 9)  // Only 10-bit
+#define I2C_ADD8 (1 << 8)  // Only 10-bit
+#define I2C_ADD7 (1 << 7)  // Both 10-bit and 7-bit
+#define I2C_ADD6 (1 << 6)  // Both 10-bit and 7-bit
+#define I2C_ADD5 (1 << 5)  // Both 10-bit and 7-bit
+#define I2C_ADD4 (1 << 4)  // Both 10-bit and 7-bit
+#define I2C_ADD3 (1 << 3)  // Both 10-bit and 7-bit
+#define I2C_ADD2 (1 << 2)  // Both 10-bit and 7-bit
+#define I2C_ADD1 (1 << 1)  // Both 10-bit and 7-bit
+#define I2C_ADD0 (1 << 0)  // Only 10-bit
+
+#define I2C1_OAR2 (*(volatile u32 *)(I2C1_BASE + 0x0c))  // Own address 2
+#define I2C2_OAR2 (*(volatile u32 *)(I2C2_BASE + 0x0c))  // Own address 2
+
+/* Bits 15 ~ 8: Reserved */
+#define I2C_ADD7 (1 << 7)
+#define I2C_ADD6 (1 << 6)
+#define I2C_ADD5 (1 << 5)
+#define I2C_ADD4 (1 << 4)
+#define I2C_ADD3 (1 << 3)
+#define I2C_ADD2 (1 << 2)
+#define I2C_ADD1 (1 << 1)
+#define I2C_ENDUAL (1 << 0)  // Dual addressing mode enable
+
+#define I2C1_DR (*(volatile u32 *)(I2C1_BASE + 0x10))  // Data register
+#define I2C2_DR (*(volatile u32 *)(I2C2_BASE + 0x10))  // Data register
+
+/* Bits 15 ~ 8: Reserved */
+#define I2C_DR7 (1 << 7)
+#define I2C_DR6 (1 << 6)
+#define I2C_DR5 (1 << 5)
+#define I2C_DR4 (1 << 4)
+#define I2C_DR3 (1 << 3)
+#define I2C_DR2 (1 << 2)
+#define I2C_DR1 (1 << 1)
+#define I2C_DR0 (1 << 0)
+
+#define I2C1_SR1 (*(volatile u32 *)(I2C1_BASE + 0x14))  // Status register 1
+#define I2C2_SR1 (*(volatile u32 *)(I2C2_BASE + 0x14))  // Status register 1
+
+#define I2C_SMBALERT (1 << 15)  // SMBus alert
+#define I2C_TIMEOUT (1 << 14)   // Timeout or Tlow error
+/* Bit 13: Reserved */
+#define I2C_PECERR (1 << 12)  // PEC error in reception
+#define I2C_OVR (1 << 11)     // Overrun/underrun
+#define I2C_AF (1 << 10)      // Acknowledge failure
+#define I2C_ARLO (1 << 9)     // Arbitration lost (master mode)
+#define I2C_BERR (1 << 8)     // Bus error
+#define I2C_TXE (1 << 7)      // Data register empty (transmitters)
+#define I2C_RXNE (1 << 6)     // Data register not empty (receivers)
+/* Bit 5: Reserved */
+#define I2C_STOPF (1 << 4)  // Stop detection (slave mode)
+#define I2C_ADD10 (1 << 3)  // 10-bit header sent (master mode)
+#define I2C_BTF (1 << 2)    // Byte transfer finished
+#define I2C_ADDR (1 << 1)   // Address sent (master) / matched (slave)
+#define I2C_SB (1 << 0)     // Start bit (master mode)
+
+#define I2C1_SR2 (*(volatile u32 *)(I2C1_BASE + 0x18))  // Status register 2
+#define I2C2_SR2 (*(volatile u32 *)(I2C2_BASE + 0x18))  // Status register 2
+
+#define I2C_PEC7 (1 << 15)     // Packet error checking register
+#define I2C_PEC6 (1 << 14)     //
+#define I2C_PEC5 (1 << 13)     //
+#define I2C_PEC4 (1 << 12)     //
+#define I2C_PEC3 (1 << 11)     //
+#define I2C_PEC2 (1 << 10)     //
+#define I2C_PEC1 (1 << 9)      //
+#define I2C_PEC0 (1 << 8)      //
+#define I2C_DUALF (1 << 7)     // Dual flag (slave mode)
+#define I2C_SMBHOST (1 << 6)   // SMBus host header (slave mode)
+#define I2C_SMBFAULT (1 << 5)  // SMBus device default address (slave mode)
+#define I2C_GENCALL (1 << 4)   // General call address (slave mode)
+/* Bit 3: Reserved */
+#define I2C_TRA (1 << 2)   // Transmitter / receiver
+#define I2C_BUSY (1 << 1)  // Bus busy
+#define I2C_MSL (1 << 0)   // Master / slave (1: master mode)
+
+#define I2C1_OCR (*(volatile u32 *)(I2C1_BASE + 0x1c))  // Clock control
+#define I2C2_OCR (*(volatile u32 *)(I2C2_BASE + 0x1c))  // Clock control
+
+#define I2C_FS (1 << 15)    // Master mode selection (1: Fm mode)
+#define I2C_DUTY (1 << 14)  // Fm mode duty cycle
+/* Bit 13: Reserved */
+/* Bit 12: Reserved */
+#define I2C_CCR11 (1 << 11)  // Clock control register (master mode)
+#define I2C_CCR10 (1 << 10)  //
+#define I2C_CCR9 (1 << 9)    //
+#define I2C_CCR8 (1 << 8)    //
+#define I2C_CCR7 (1 << 7)    //
+#define I2C_CCR6 (1 << 6)    //
+#define I2C_CCR5 (1 << 5)    //
+#define I2C_CCR4 (1 << 4)    //
+#define I2C_CCR3 (1 << 3)    //
+#define I2C_CCR2 (1 << 2)    //
+#define I2C_CCR1 (1 << 1)    //
+#define I2C_CCR0 (1 << 0)    //
+
+#define I2C1_TRISE (*(volatile u32 *)(I2C1_BASE + 0x20))  // TRISE
+#define I2C2_TRISE (*(volatile u32 *)(I2C2_BASE + 0x20))  // TRISE
+
+/* Bits 15 ~ 6: Reserved */
+#define I2C_TRISE5 (1 << 5)  // Maximum rise time in fm/sm mode (master mode)
+#define I2C_TRISE4 (1 << 4)  //
+#define I2C_TRISE3 (1 << 3)  //
+#define I2C_TRISE2 (1 << 2)  //
+#define I2C_TRISE1 (1 << 1)  //
+#define I2C_TRISE0 (1 << 0)  //
+
 // Serial Peripheral Interface  //////////////////////////////////////////////
 
 // TODO(mastensg): support SPI1, SPI2, ...
