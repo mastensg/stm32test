@@ -6,7 +6,7 @@
 
 // Reset and clock control (RCC)  ////////////////////////////////////////////
 
-#define RCC_BASE ((volatile void *)0x40021000)
+#define RCC_BASE ((volatile uint8_t *)0x40021000)
 
 #define RCC_CR (*(volatile u32 *)(RCC_BASE + 0x00))  // Clock control
 
@@ -221,8 +221,8 @@
 
 // Inter-integrated Circuit Interface  ///////////////////////////////////////
 
-#define I2C1_BASE ((volatile void *)0x40005400)
-#define I2C2_BASE ((volatile void *)0x40005800)
+#define I2C1_BASE ((volatile uint8_t *)0x40005400)
+#define I2C2_BASE ((volatile uint8_t *)0x40005800)
 
 #define I2C1_CR1 (*(volatile u32 *)(I2C1_BASE + 0x00))  // Control register 1
 #define I2C2_CR1 (*(volatile u32 *)(I2C2_BASE + 0x00))  // Control register 1
@@ -385,7 +385,7 @@
 
 // TODO(mastensg): support SPI1, SPI2, ...
 
-#define SPI_BASE ((volatile void *)0x40013000)
+#define SPI_BASE ((volatile uint8_t *)0x40013000)
 
 #define SPI_CR1 (*(volatile u32 *)(SPI_BASE + 0x00))  // Control register 1
 #define SPI_BIDIMODE (1 << 15)  // Bidirectional data mode enable
@@ -455,7 +455,7 @@
 
 // TODO(mastensg): support USART1, USART2, ...
 
-#define USART_BASE ((volatile void *)0x40013800)
+#define USART_BASE ((volatile uint8_t *)0x40013800)
 
 #define USART_SR (*(volatile u32 *)(USART_BASE + 0x00))  // Status register
 /* Bit 15: Reserved */
@@ -650,21 +650,21 @@
 // GPIO  /////////////////////////////////////////////////////////////////////
 
 // GPIO MODE bits
-#define GPIO_INPUT 0b00
-#define GPIO_OUTPUT_10M 0b01
-#define GPIO_OUTPUT_2M 0b10
-#define GPIO_OUTPUT_50M 0b11
+#define GPIO_INPUT 0
+#define GPIO_OUTPUT_10M 1
+#define GPIO_OUTPUT_2M 2
+#define GPIO_OUTPUT_50M 3
 
 // GPIO input configuration bits
-#define GPIO_ANALOG 0b00
-#define GPIO_FLOATING 0b01
-#define GPIO_PULLED 0b10
+#define GPIO_ANALOG 0
+#define GPIO_FLOATING 1
+#define GPIO_PULLED 2
 
 // GPIO output configuration bits
-#define GPIO_GENERAL_PUSH_PULL 0b00
-#define GPIO_GENERAL_OPEN_DRAIN 0b01
-#define GPIO_ALTERNATE_PUSH_PULL 0b10
-#define GPIO_ALTERNATE_OPEN_DRAIN 0b11
+#define GPIO_GENERAL_PUSH_PULL 0
+#define GPIO_GENERAL_OPEN_DRAIN 1
+#define GPIO_ALTERNATE_PUSH_PULL 2
+#define GPIO_ALTERNATE_OPEN_DRAIN 3
 
 static void gpio_configure(volatile u32 *base, u8 pin, u8 mode, u8 cnf) {
   u8 is_high = 7 < pin;

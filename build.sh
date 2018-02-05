@@ -1,9 +1,7 @@
 #!/bin/sh -eu
 
-./breathe.py > breathe.h
-
 arm-none-eabi-gcc -std=c11 \
-  -Wall -Wextra -Wno-main \
+  -Wall -Wextra -Wpedantic -Wno-main -Wno-unused \
   -ffreestanding -nostdlib \
   -g \
   -c -fno-common -O0 -mcpu=cortex-m3 -mthumb \

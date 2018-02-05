@@ -23,3 +23,4 @@ See also
 - https://learn.adafruit.com/monochrome-oled-breakouts
 - https://github.com/guyc/py-gaugette/blob/master/samples/ssd1306_test.py
 - https://github.com/adafruit/Adafruit_SSD1306/blob/master/examples/ssd1306_128x64_spi/ssd1306_128x64_spi.ino
+- https://github.com/jandelgado/arduino/wiki/SSD1306-based-OLED-connected-to-Arduino
