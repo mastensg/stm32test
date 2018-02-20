@@ -109,10 +109,11 @@ static void spi_init() {
   SPI_CR1 |= SPI_SSM | SPI_SSI | SPI_SPE | (0 << 3) | SPI_MSTR;
 }
 
-static void spi_sendchar(u8 c) {
+void spi_sendchar(u8 c) {
   for (; !(SPI_SR & SPI_TXE);) {
   }
   SPI_DR = c;
+    delay_nops(10);  // 600 nops ~1ms
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -182,13 +183,14 @@ static void oled_command(u8 c) {
   GPIOB_ODR |= OLED_CS;
 }
 
-static void oled_data(const u8 *data, size_t size) {
+void oled_data(const u8 *data, size_t size) {
   GPIOB_ODR |= OLED_CS;
   GPIOB_ODR |= OLED_DC;
   GPIOB_ODR &= ~OLED_CS;
 
   for (size_t i = 0; i < size; ++i) {
     spi_sendchar(data[i]);
+    //spi_sendchar(0x55);
   }
 
   GPIOB_ODR |= OLED_CS;
@@ -297,7 +299,15 @@ static u8 the_fb[1024];
 
 void rst_handler() {
   chirp_init();
+#if 0
+  for (;;) {
+    GPIOC_ODR = (0 << 13);
+    delay_nops(300000);
 
+    GPIOC_ODR = (1 << 13);
+    delay_nops(300000);
+  }
+#else
   oled_init();
   oled_begin();
 
@@ -315,7 +325,7 @@ void rst_handler() {
       }
       c->world[CARPET_WIDTH - 1] = 0;
 
-      for (int y = 0; y < 64; ++y) {
+      for (int y = 8; y < 64; ++y) {
         for (int x = 0; x < CARPET_WIDTH - 1; ++x) {
           c->world[x] = c->world[x] ^ c->world[x + 1];
 
@@ -325,7 +335,7 @@ void rst_handler() {
         }
       }
 
-      for (int i = 0; i < 3; ++i) {
+      for (int i = 0; i < 1; ++i) {
         for (int x = 0; x < CARPET_WIDTH - 1; ++x) {
           c->new_world[x] = c->new_world[x] ^ c->new_world[x + 1];
         }
@@ -343,6 +353,7 @@ void rst_handler() {
     }
     // delay_nops(100000);
   }
+#endif
 }
 
 void nmi_handler() {
