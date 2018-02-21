@@ -4,7 +4,7 @@ arm-none-eabi-gcc -std=c11 \
   -Wall -Wextra -Wpedantic -Wno-main -Wno-unused \
   -ffreestanding -nostdlib \
   -g \
-  -c -fno-common -O3 -mcpu=cortex-m3 -mthumb \
+  -c -fno-common -O2 -mcpu=cortex-m3 -mthumb \
   main.c
 
 #arm-none-eabi-gcc -std=c11 \

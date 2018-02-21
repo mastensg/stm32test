@@ -3,7 +3,7 @@
 # cat test.lst | grep '^ \?[0-9a-f]\+:'
 
 /^ ?[0-9a-f].+:/ {
-    print "                                 " $0
+    print "                                                     " $0
     last_line = "assembly"
 }
 

@@ -198,9 +198,9 @@ void oled_data(const u8 *data, size_t size) {
 
 static void oled_begin() {
   GPIOB_ODR |= OLED_RESET;
-  delay_nops(600);  // ~1ms
+  //delay_nops(600);  // ~1ms
   GPIOB_ODR &= ~OLED_RESET;
-  delay_nops(6000);  // ~10ms
+  //delay_nops(6000);  // ~10ms
   GPIOB_ODR |= OLED_RESET;
 
   oled_command(OLED_DISPLAY_OFF);
@@ -314,8 +314,9 @@ void rst_handler() {
   struct carpet carpet;
   carpet_init(&carpet);
 
+  fb_clear(the_fb, 0);
   for (;;) {
-    fb_clear(the_fb, 0);
+    //fb_clear(the_fb, 0);
 
     {
       struct carpet *c = &carpet;
