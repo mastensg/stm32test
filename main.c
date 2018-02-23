@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "mastensg.h"
+#include "src/clock.h"
 #include "stm32f103x8.h"
 
 //////////////////////////////////////////////////////////////////////////////
@@ -24,10 +25,10 @@ static void chirp_init() {
 static void chirp() {
   for (u32 i = 0; i < 2; ++i) {
     GPIOC_ODR = (0 << 13);
-    delay_nops(30000);
+    delay_nops(300000);
 
     GPIOC_ODR = (1 << 13);
-    delay_nops(30000);
+    delay_nops(300000);
   }
 }
 
@@ -113,7 +114,7 @@ void spi_sendchar(u8 c) {
   for (; !(SPI_SR & SPI_TXE);) {
   }
   SPI_DR = c;
-    delay_nops(10);  // 600 nops ~1ms
+  delay_nops(10);  // 600 nops ~1ms
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -190,7 +191,7 @@ void oled_data(const u8 *data, size_t size) {
 
   for (size_t i = 0; i < size; ++i) {
     spi_sendchar(data[i]);
-    //spi_sendchar(0x55);
+    // spi_sendchar(0x55);
   }
 
   GPIOB_ODR |= OLED_CS;
@@ -198,9 +199,9 @@ void oled_data(const u8 *data, size_t size) {
 
 static void oled_begin() {
   GPIOB_ODR |= OLED_RESET;
-  //delay_nops(600);  // ~1ms
+  // delay_nops(600);  // ~1ms
   GPIOB_ODR &= ~OLED_RESET;
-  //delay_nops(6000);  // ~10ms
+  // delay_nops(6000);  // ~10ms
   GPIOB_ODR |= OLED_RESET;
 
   oled_command(OLED_DISPLAY_OFF);
@@ -314,9 +315,22 @@ void rst_handler() {
   struct carpet carpet;
   carpet_init(&carpet);
 
+  chirp();
+  chirp();
+  clock_init();
+  chirp();
+  chirp();
+  chirp();
+  chirp();
   fb_clear(the_fb, 0);
+  float t = 0.0f;
   for (;;) {
-    //fb_clear(the_fb, 0);
+    clock_draw(the_fb, t);
+    oled_data(the_fb, 1024);
+    t += 0.01f;
+  }
+  for (;;) {
+    // fb_clear(the_fb, 0);
 
     {
       struct carpet *c = &carpet;
