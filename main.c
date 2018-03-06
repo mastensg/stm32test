@@ -316,19 +316,16 @@ void rst_handler() {
   carpet_init(&carpet);
 
   chirp();
-  chirp();
   clock_init();
-  chirp();
-  chirp();
-  chirp();
-  chirp();
   fb_clear(the_fb, 0);
   float t = 0.0f;
+#if 1
   for (;;) {
     clock_draw(the_fb, t);
     oled_data(the_fb, 1024);
     t += 0.01f;
   }
+#endif
   for (;;) {
     // fb_clear(the_fb, 0);
 

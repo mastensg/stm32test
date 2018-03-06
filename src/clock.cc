@@ -2107,8 +2107,8 @@ static uint8_t sdf_20_28[height * width];
 // static float sdf_bull[ height * width];
 
 void clock_init() {
-  bitmap_to_sdf(sdf_20_27, picture_20_27, width, height);
-  bitmap_to_sdf(sdf_20_28, picture_20_28, width, height);
+  //bitmap_to_sdf(sdf_20_27, picture_20_27, width, height);
+  //bitmap_to_sdf(sdf_20_28, picture_20_28, width, height);
   // bitmap_to_sdf(sdf_bull, picture_bull, width, height);
 }
 
@@ -2119,8 +2119,8 @@ void clock_draw(uint8_t *fb, float t) {
     float d = (1.0f - t) * d0 + t * d1;
 
 #if 1
-    fb_point(fb, i % width, i / width, d < 1.2f);
-    //fb_point(fb, i % width, i / width, 128 < picture_bull[i]);
+    //fb_point(fb, i % width, i / width, d < 1.2f);
+    fb_point(fb, i % width, i / width, 128 < picture_bull[i]);
 #else
     uint8_t p;
     if (false) {
